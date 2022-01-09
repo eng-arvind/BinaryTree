@@ -13,20 +13,27 @@ struct Node
 		left=right=NULL;
 	}
 };
+   bool isLeaf(Node* root){
+        return !root->left && !root->right;
+    }
 void leftside(Node* root,vector<int> &ans)
 {
-	Node* cr=root;
-	while(cr->left!=NULL && cr->right!=NULL)
+	Node* cr=root->left;
+	while(cr)
 	{
+		if(!isLeaf(cr))
 		ans.push_back(cr->data);
-		if(cr->left!=NULL) cr=cr->left;
-		else if(cr->right!=NULL) cr=cr->right;
+		if(cr->left) cr=cr->left;
+		else cr=cr->right;
 	}
 }
 void leafside(Node* root,vector<int> &ans)
 {
-	if(root->left==NULL && root->right==NULL)
+	if(isLeaf(root))
+	{
 		ans.push_back(root->data);
+		return;
+	}
 	if(root->left)
 	leafside(root->left,ans);
 	if(root->right)
@@ -36,11 +43,12 @@ void rightside(Node* root,vector<int> &ans)
 {
 	Node* cr=root->right;
 	vector<int> temp;
-	while(cr->left!=NULL && cr->right!=NULL)
+	while(cr)
 	{
+		if(!isLeaf(cr))
 		temp.push_back(cr->data);
-		if(cr->right!=NULL) cr=cr->right;
-		else if(cr->left!=NULL) cr=cr->left;
+		if(cr->right) cr=cr->right;
+		else cr=cr->left;
 		
 	}
 	for(int i=temp.size()-1;i>=0;--i)
@@ -52,11 +60,7 @@ vector<int> boundary_tra(Node* root)
 {
 	vector<int> ans;
     if(root==NULL) return ans;
-   if(root->left==NULL && root->right==NULL)
-   {
-   		ans.push_back(root->data);
-   		return ans;
-   }
+   ans.push_back(root->data);
    leftside(root,ans);
    leafside(root,ans);
    rightside(root,ans);
